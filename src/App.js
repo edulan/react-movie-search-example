@@ -1,10 +1,13 @@
 import React, { PureComponent } from 'react'
+import PropTypes from 'prop-types'
 import './App.css'
 
 import Error from './Error'
 import Search from './Search'
 import List from './List'
 import Company from './Company'
+
+import connectUrl from './connectUrl'
 
 import { buildSearchPath } from './urlHelper'
 import { searchCompany as search } from './companyService'
@@ -14,7 +17,7 @@ class App extends PureComponent {
     super(props)
 
     this.state = {
-      term: props.match.params.term,
+      term: props.term,
       items: [],
       errorMessage: null
     }
@@ -24,8 +27,8 @@ class App extends PureComponent {
     this.receiveSearch = this.receiveSearch.bind(this)
     this.setError = this.setError.bind(this)
     this.clearError = this.clearError.bind(this)
-    this.updateItems = this.updateItems.bind(this)
-    this.updateTerm = this.updateTerm.bind(this)
+    this.setItems = this.setItems.bind(this)
+    this.setTerm = this.setTerm.bind(this)
   }
 
   componentDidMount () {
@@ -45,15 +48,14 @@ class App extends PureComponent {
   }
 
   componentWillReceiveProps (nextProps) {
-    const locationChanged = nextProps.location !== this.props.location
-
-    if (locationChanged) {
-      this.updateTerm(nextProps.match.params.term)
+    if (nextProps.term !== this.props.term) {
+      this.setTerm(nextProps.term)
     }
   }
 
   updateUrl (term) {
-    if (this.props.match.params.term !== term) {
+    // Only update if needed
+    if (this.props.term !== this.state.term) {
       this.props.history.push(buildSearchPath(term))
     }
   }
@@ -69,7 +71,7 @@ class App extends PureComponent {
     }
 
     this.clearError()
-    this.updateItems(search.result)
+    this.setItems(search.result)
   }
 
   clearError () {
@@ -80,11 +82,11 @@ class App extends PureComponent {
     this.setState(() => ({ errorMessage }))
   }
 
-  updateItems (items) {
+  setItems (items) {
     this.setState(() => ({ items }))
   }
 
-  updateTerm (term) {
+  setTerm (term) {
     this.setState(() => ({ term }))
   }
 
@@ -96,7 +98,7 @@ class App extends PureComponent {
         <div className='Search'>
           <Search
             term={term}
-            onSearch={this.updateTerm}
+            onSearch={this.setTerm}
           />
         </div>
         <div className='Items'>
@@ -109,8 +111,18 @@ class App extends PureComponent {
   }
 }
 
+App.propTypes = {
+  term: PropTypes.string
+}
+
 App.defaultProps = {
   search: search
 }
 
-export default App
+function mapParamsToProps ({ term }) {
+  return {
+    term
+  }
+}
+
+export default connectUrl(mapParamsToProps)(App)

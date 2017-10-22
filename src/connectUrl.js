@@ -1,20 +1,39 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
-// It's a function...
-function connectUrl () {
-  // Which returns a function that takes a component...
+function connectUrl (mapParamsToProps) {
   return function (WrappedComponent) {
-    // It creates a new wrapper component...
-    class ConnectedComponent extends React.Component {
+    class ConnectUrl extends React.Component {
+      constructor (props) {
+        super(props)
+
+        this.state = {
+          wrappedProps: mapParamsToProps(this.props.match.params)
+        }
+      }
+
+      componentWillReceiveProps (nextProps) {
+        const locationChanged = nextProps.location !== this.props.location
+
+        if (locationChanged) {
+          this.setState(() => ({
+            wrappedProps: mapParamsToProps({...nextProps.match.params})
+          }))
+        }
+      }
+
       render () {
-        // And it renders the component it was given
-        return <WrappedComponent {...this.props} />
+        // TODO: Should we exclude Route props?
+        return <WrappedComponent {...this.props} {...this.state.wrappedProps} />
       }
     }
 
-    // Remember: it takes a component and returns a new component
-    // Gotta return it here.
-    return ConnectedComponent
+    ConnectUrl.propTypes = {
+      match: PropTypes.object.isRequired,
+      location: PropTypes.object.isRequired
+    }
+
+    return ConnectUrl
   }
 }
 
