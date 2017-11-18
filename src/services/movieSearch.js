@@ -1,5 +1,5 @@
 const OMDB_ENDPOINT = 'http://www.omdbapi.com/'
-const OMDB_API_KEY = 'BanMePlz'
+const OMDB_API_KEY = process.env.REACT_APP_API_KEY
 
 const IMAGE_NOT_AVAILABLE = 'N/A'
 const ERROR_RESPONSE = 'False'
@@ -48,7 +48,7 @@ function mapResult (result) {
   }
 }
 
-export function searchMovie (title) {
+export default function search (title) {
   return window.fetch(buildOMDBUrl(title))
     .then((response) => response.json())
     .then((result) => mapResult(result))

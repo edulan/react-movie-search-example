@@ -1,13 +1,13 @@
 import React from 'react'
 
-import { buildMovieUrl } from './urlHelper'
+import { buildMovieUrl } from '../utils/urlHelper'
 
 const Movie = ({ id, title, plot, posterUrl }) => (
   <div className='Movie'>
-    <p>{title}</p>
-    <a href={buildMovieUrl(id)} target='_blank'>
+    <a className='Movie-Link' href={buildMovieUrl(id)} target='_blank'>
       <img className='Movie-Image' src={posterUrl} alt={title} />
     </a>
+    <p>{title}</p>
   </div>
 )
 

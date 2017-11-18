@@ -8,16 +8,16 @@ import {
 } from 'react-router-dom'
 
 import './index.css'
-import App from './App'
+import AppContainer from './components/AppContainer'
 
-import { buildSearchPath } from './urlHelper'
+import { defaultSearchPath } from './utils/urlHelper'
 import registerServiceWorker from './registerServiceWorker'
 
 ReactDOM.render(
   <Router>
     <Switch>
-      <Route exact path='/search/:term' component={App} />
-      <Redirect to={buildSearchPath('The Matrix')} />
+      <Route exact path='/search/:term' component={AppContainer} />
+      <Redirect to={defaultSearchPath()} />
     </Switch>
   </Router>,
   document.getElementById('root')

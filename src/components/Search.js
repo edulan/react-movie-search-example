@@ -10,12 +10,12 @@ class Search extends PureComponent {
 
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
-    this.updateTerm = this.updateTerm.bind(this)
+    this.setTerm = this.setTerm.bind(this)
   }
 
   componentWillReceiveProps (nextProps) {
     if (nextProps.term !== this.props.term) {
-      this.updateTerm(nextProps.term)
+      this.setTerm(nextProps.term)
     }
   }
 
@@ -26,10 +26,10 @@ class Search extends PureComponent {
   }
 
   handleChange (event) {
-    this.updateTerm(event.target.value)
+    this.setTerm(event.target.value)
   }
 
-  updateTerm (term) {
+  setTerm (term) {
     this.setState(() => ({ term }))
   }
 
@@ -38,7 +38,7 @@ class Search extends PureComponent {
 
     return (
       <form onSubmit={this.handleSubmit}>
-        <input type='search' value={term} onChange={this.handleChange} required />
+        <input className='Search-Input' type='search' value={term} onChange={this.handleChange} required />
         <button type='submit'>Search</button>
       </form>
     )

@@ -1,18 +1,13 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import './App.css'
 
-import Error from './Error'
-import Search from './Search'
-import List from './List'
-import Company from './Company'
-
+import App from './App'
 import connectUrl from './connectUrl'
 
-import { buildSearchPath } from './urlHelper'
-import { searchCompany as search } from './companyService'
+import { buildSearchPath } from '../utils/urlHelper'
+import search from '../services/movieSearch'
 
-class App extends PureComponent {
+class AppContainer extends PureComponent {
   constructor (props) {
     super(props)
 
@@ -94,28 +89,22 @@ class App extends PureComponent {
     const { items, term, errorMessage } = this.state
 
     return (
-      <div className='App'>
-        <div className='Search'>
-          <Search
-            term={term}
-            onSearch={this.setTerm}
-          />
-        </div>
-        <div className='Items'>
-          {errorMessage
-            ? <Error message={errorMessage} />
-            : <List items={items} itemRenderer={(item) => <Company {...item} />} />}
-        </div>
-      </div>
+      <App
+        items={items}
+        term={term}
+        errorMessage={errorMessage}
+        onSearch={this.setTerm}
+      />
     )
   }
 }
 
-App.propTypes = {
-  term: PropTypes.string
+AppContainer.propTypes = {
+  term: PropTypes.string,
+  search: PropTypes.func
 }
 
-App.defaultProps = {
+AppContainer.defaultProps = {
   search: search
 }
 
@@ -125,4 +114,4 @@ function mapParamsToProps ({ term }) {
   }
 }
 
-export default connectUrl(mapParamsToProps)(App)
+export default connectUrl(mapParamsToProps)(AppContainer)
